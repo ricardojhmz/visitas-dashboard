@@ -7,21 +7,13 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --m:#5C2D8E;--ml:#A678D4;--mb:#F4EEF9;
-  --v:#1A7A52;--r:#C0392B;--n:#C0700A;--nb:#FEF5E7;--a:#1565C0;
-  --t:#1A1028;--ts:#6B5F80;--w:#FFFFFF;
-  --s:0 2px 16px rgba(92,45,142,.10);--sc:0 1px 6px rgba(92,45,142,.09);
-}
+:root{--m:#5C2D8E;--ml:#A678D4;--mb:#F4EEF9;--v:#1A7A52;--r:#C0392B;--n:#C0700A;--nb:#FEF5E7;--a:#1565C0;--t:#1A1028;--ts:#6B5F80;--w:#FFFFFF;--s:0 2px 16px rgba(92,45,142,.10);--sc:0 1px 6px rgba(92,45,142,.09)}
 body{font-family:'DM Sans',sans-serif;background:#EDE6F5;color:var(--t);min-height:100vh}
-
 #loading{position:fixed;inset:0;background:#3A1260;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .5s ease}
 #loading.oculto{opacity:0;pointer-events:none}
 .spinner{width:48px;height:48px;border-radius:50%;border:4px solid rgba(255,255,255,.2);border-top-color:#fff;animation:spin .8s linear infinite;margin-bottom:16px}
 @keyframes spin{to{transform:rotate(360deg)}}
-#loading p{color:rgba(255,255,255,.75);font-size:14px;text-align:center}
-#loading small{color:rgba(255,255,255,.4);font-size:12px;margin-top:8px;text-align:center;max-width:280px}
-
+#loading p{color:rgba(255,255,255,.75);font-size:14px;text-align:center;padding:0 1rem}
 .hero{background:linear-gradient(135deg,#3A1260 0%,#5C2D8E 55%,#8B4EC4 100%);position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-60px;right:-80px;width:360px;height:360px;border-radius:50%;background:rgba(255,255,255,.05)}
 .hi{max-width:960px;margin:0 auto;padding:2.8rem 2rem 2.2rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem;position:relative;z-index:1}
@@ -34,7 +26,6 @@ body{font-family:'DM Sans',sans-serif;background:#EDE6F5;color:var(--t);min-heig
 .hf{font-size:17px;color:#fff;font-weight:600}
 .hrsp{margin-top:14px;font-size:11.5px;color:rgba(255,255,255,.6);line-height:1.6}
 .hrsp strong{color:rgba(255,255,255,.85);font-weight:500}
-
 .con{max-width:960px;margin:0 auto;padding:2rem}
 .mc{background:var(--w);border-radius:18px;padding:1.6rem 2rem;box-shadow:var(--s);margin-bottom:1.5rem;position:relative;overflow:hidden}
 .mc::before{content:'';position:absolute;top:0;left:0;width:5px;height:100%;background:linear-gradient(180deg,#5C2D8E,#A678D4);border-radius:5px 0 0 5px}
@@ -47,19 +38,17 @@ body{font-family:'DM Sans',sans-serif;background:#EDE6F5;color:var(--t);min-heig
 .bf{height:100%;background:linear-gradient(90deg,#5C2D8E,#9B6FCE);border-radius:7px;transition:width 1.4s cubic-bezier(.4,0,.2,1);width:0%}
 .bl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ts)}
 .rn{margin-top:10px;padding:8px 14px;background:var(--nb);border-radius:8px;font-size:12.5px;color:var(--n);font-weight:500;display:inline-block}
-
 .kg{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:1.5rem}
 @media(max-width:700px){.kg{grid-template-columns:repeat(2,1fr)}}
 .kpi{background:var(--w);border-radius:16px;padding:1.2rem 1rem;box-shadow:var(--sc);text-align:center}
 .ki{font-size:26px;margin-bottom:8px;display:block}
 .kv{font-size:32px;font-weight:700;line-height:1;margin-bottom:6px;font-family:'DM Serif Display',serif}
 .kl{font-size:10.5px;color:var(--ts);text-transform:uppercase;letter-spacing:.08em;font-weight:500;line-height:1.3}
-.k1{border-top:3px solid var(--m)} .k1 .kv{color:var(--m)}
-.k2{border-top:3px solid var(--a)} .k2 .kv{color:var(--a)}
-.k3{border-top:3px solid var(--v)} .k3 .kv{color:var(--v)}
-.k4{border-top:3px solid var(--r)} .k4 .kv{color:var(--r)}
-.k5{border-top:3px solid #9B6FCE} .k5 .kv{color:#7B45A8}
-
+.k1{border-top:3px solid var(--m)}.k1 .kv{color:var(--m)}
+.k2{border-top:3px solid var(--a)}.k2 .kv{color:var(--a)}
+.k3{border-top:3px solid var(--v)}.k3 .kv{color:var(--v)}
+.k4{border-top:3px solid var(--r)}.k4 .kv{color:var(--r)}
+.k5{border-top:3px solid #9B6FCE}.k5 .kv{color:#7B45A8}
 .dc{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem}
 @media(max-width:640px){.dc{grid-template-columns:1fr}}
 .cd{background:var(--w);border-radius:18px;padding:1.4rem 1.5rem;box-shadow:var(--sc)}
@@ -74,9 +63,7 @@ body{font-family:'DM Sans',sans-serif;background:#EDE6F5;color:var(--t);min-heig
 .ci{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F0ECF7;font-size:13.5px}
 .ci:last-child{border-bottom:none}
 .cb{font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px}
-.dai{background:#E3F2FD;color:#1565C0}
-.pai{background:#E8F5E9;color:#2E7D32}
-.na{background:#FEF5E7;color:#C0700A}
+.dai{background:#E3F2FD;color:#1565C0}.pai{background:#E8F5E9;color:#2E7D32}.na{background:#FEF5E7;color:#C0700A}
 .tm{width:100%;border-collapse:collapse;font-size:13px}
 .tm th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ts);font-weight:600;padding:6px 8px;border-bottom:2px solid #EDE6F5}
 .tm th:not(:first-child){text-align:center}
@@ -89,19 +76,11 @@ body{font-family:'DM Sans',sans-serif;background:#EDE6F5;color:var(--t);min-heig
 .ft{text-align:center;padding:1.5rem 2rem 2.5rem;font-size:11.5px;color:var(--ts)}
 .ft strong{color:var(--m)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.a1{animation:fadeUp .5s ease both}
-.a2{animation:fadeUp .5s .1s ease both}
-.a3{animation:fadeUp .5s .2s ease both}
-.a4{animation:fadeUp .5s .3s ease both}
+.a1{animation:fadeUp .5s ease both}.a2{animation:fadeUp .5s .1s ease both}.a3{animation:fadeUp .5s .2s ease both}.a4{animation:fadeUp .5s .3s ease both}
 </style>
 </head>
 <body>
-
-<div id="loading">
-  <div class="spinner"></div>
-  <p>Cargando datos actualizados…</p>
-  <small>Conectando con Google Sheets</small>
-</div>
+<div id="loading"><div class="spinner"></div><p>Cargando datos actualizados…</p></div>
 
 <div id="app" style="display:none">
   <div class="hero">
@@ -122,7 +101,6 @@ body{font-family:'DM Sans',sans-serif;background:#EDE6F5;color:var(--t);min-heig
       </div>
     </div>
   </div>
-
   <div class="con">
     <div class="mc a1">
       <div class="mh">
@@ -136,7 +114,6 @@ body{font-family:'DM Sans',sans-serif;background:#EDE6F5;color:var(--t);min-heig
       <div class="bl"><span>0</span><span>Mitad: 117</span><span>Meta: 235</span></div>
       <div class="rn" id="ritmo">Calculando…</div>
     </div>
-
     <div class="kg">
       <div class="kpi k1 a1"><span class="ki">📋</span><div class="kv" id="k-base">—</div><div class="kl">En base<br>(total registros)</div></div>
       <div class="kpi k2 a2"><span class="ki">🏠</span><div class="kv" id="k-vis">—</div><div class="kl">Visitados<br>(acumulado)</div></div>
@@ -144,19 +121,14 @@ body{font-family:'DM Sans',sans-serif;background:#EDE6F5;color:var(--t);min-heig
       <div class="kpi k4 a3"><span class="ki">❌</span><div class="kv" id="k-noloc">—</div><div class="kl">No<br>localizadas</div></div>
       <div class="kpi k5 a3"><span class="ki">🔗</span><div class="kv" id="k-canal">—</div><div class="kl">Casos<br>canalizados</div></div>
     </div>
-
     <div class="dc">
       <div class="cd a2">
         <div class="ct">Resultado de visitas</div>
         <div class="dw">
-          <svg id="dona-svg" width="120" height="120" viewBox="0 0 120 120" style="flex-shrink:0">
+          <svg width="120" height="120" viewBox="0 0 120 120" style="flex-shrink:0">
             <circle cx="60" cy="60" r="48" fill="none" stroke="#EDE6F5" stroke-width="18"/>
-            <circle id="arc-loc" cx="60" cy="60" r="48" fill="none" stroke="#1A7A52" stroke-width="18"
-              stroke-dasharray="0 301.6" stroke-dashoffset="75.4" stroke-linecap="round"
-              style="transition:stroke-dasharray 1.4s ease"/>
-            <circle id="arc-noloc" cx="60" cy="60" r="48" fill="none" stroke="#C0392B" stroke-width="18"
-              stroke-dasharray="0 301.6" stroke-dashoffset="75.4" stroke-linecap="round"
-              style="transition:stroke-dasharray 1.4s ease,stroke-dashoffset 1.4s ease"/>
+            <circle id="arc-loc" cx="60" cy="60" r="48" fill="none" stroke="#1A7A52" stroke-width="18" stroke-dasharray="0 301.6" stroke-dashoffset="75.4" stroke-linecap="round" style="transition:stroke-dasharray 1.4s ease"/>
+            <circle id="arc-noloc" cx="60" cy="60" r="48" fill="none" stroke="#C0392B" stroke-width="18" stroke-dasharray="0 301.6" stroke-dashoffset="75.4" stroke-linecap="round" style="transition:stroke-dasharray 1.4s ease,stroke-dashoffset 1.4s ease"/>
             <text x="60" y="55" text-anchor="middle" font-family="DM Serif Display,serif" font-size="22" fill="#5C2D8E" id="dona-pct">—</text>
             <text x="60" y="71" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#6B5F80">efectividad</text>
           </svg>
@@ -167,13 +139,11 @@ body{font-family:'DM Sans',sans-serif;background:#EDE6F5;color:var(--t);min-heig
           </div>
         </div>
       </div>
-
       <div class="cd a3">
         <div class="ct">Área de canalización</div>
         <div id="canal-lista"></div>
       </div>
     </div>
-
     <div class="cd a4" style="margin-bottom:1.5rem">
       <div class="ct">Desglose por municipio — acumulado 2026</div>
       <table class="tm">
@@ -182,235 +152,71 @@ body{font-family:'DM Sans',sans-serif;background:#EDE6F5;color:var(--t);min-heig
       </table>
     </div>
   </div>
-
-  <div class="ft">
-    Datos en tiempo real · <strong>VISITAS_SEC_MUJERES_2026</strong> · Secretaría de las Mujeres, NL · <span id="footer-fecha"></span>
-  </div>
+  <div class="ft">Datos en tiempo real · <strong>VISITAS_SEC_MUJERES_2026</strong> · Secretaría de las Mujeres, NL · <span id="footer-fecha"></span></div>
 </div>
 
 <script>
-// ─── CONFIGURACIÓN ───────────────────────────────────────────
-// ID del Google Sheets (no cambia aunque el archivo cambie de nombre)
-const SHEET_ID = '1yEM9WAWN40MWdNhOFO2ITY41y4btdGAMCTjwx4zZsuI';
-const META = 235;
-const SEMANAS = 27;
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlZuIWC-HBIHN0idnjQYM53ennOzDyIME9MRhtpnS9WjzHp1bQvwCzDTlyKa89vHEKTg/exec';
+const META = 235, SEMANAS = 27;
 
-// URLs del CSV publicado — probamos la hoja PORTADA primero, luego la principal
-const URLS = [
-  `https://docs.google.com/spreadsheets/d/e/2PACX-1vTdf5GtpYjE8WzE8XzHMOGAz-woUTlEksIaBKcCqS2clTNYz-49zlH16WtgeO5CBcvzsYQX82xFo5zN/pub?gid=1062109230&single=true&output=csv`,
-  `https://docs.google.com/spreadsheets/d/e/2PACX-1vTdf5GtpYjE8WzE8XzHMOGAz-woUTlEksIaBKcCqS2clTNYz-49zlH16WtgeO5CBcvzsYQX82xFo5zN/pub?output=csv`,
-];
+function fechaHoy(){const h=new Date();const m=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];return`${h.getDate()} / ${m[h.getMonth()]} / ${h.getFullYear()}`}
 
-// Proxies CORS — el navegador los usa automáticamente cuando está en GitHub Pages
-const PROXIES = [
-  u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
-  u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
-  u => `https://thingproxy.freeboard.io/fetch/${u}`,
-];
-
-// ─── PARSEO CSV ────────────────────────────────────────────────
-function parseCSV(text) {
-  return text.split('\n').map(row => {
-    const cells = []; let cur = '', q = false;
-    for (const c of row) {
-      if (c === '"') q = !q;
-      else if (c === ',' && !q) { cells.push(cur.trim()); cur = ''; }
-      else cur += c;
-    }
-    cells.push(cur.trim());
-    return cells;
-  });
-}
-function n(v) { return parseInt((v||'').replace(/[^0-9]/g,'')) || 0; }
-function clean(v) { return (v||'').replace(/^"|"$/g,'').trim(); }
-
-// ─── EXTRACCIÓN DE DATOS ───────────────────────────────────────
-function extraer(rows) {
-  let base=0, vis=0, loc=0, canal=0, noloc=0, dai=0, paibim=0, fecha='';
-  const municipios = [];
-  const MUNS = ['ESCOBEDO','MONTERREY','SANTA CATARINA','APODACA','SAN NICOLAS','SAN NICOLÁS','PESQUERÍA','PESQUERIA'];
-
-  for (let i = 0; i < rows.length; i++) {
-    const r = rows[i];
-    const r0 = clean(r[0]).toUpperCase();
-
-    // Fecha
-    if (r0.includes('ACTUALIZACI') && clean(r[1])) fecha = clean(r[1]);
-
-    // En base y visitados (buscar par de números: mayor=base, menor=visitados)
-    if (base === 0) {
-      const a = n(r[0]), b = n(r[1]);
-      if (a >= 20 && a <= 500 && b >= 1 && b <= a && !r0.match(/[A-Z]{4,}/)) {
-        base = a; vis = b;
-      }
-    }
-
-    // Localizadas, canalizadas, no localizadas
-    if (loc === 0 && vis > 0) {
-      const a = n(r[0]), b = n(r[1]), c = n(r[2]);
-      if (a >= 1 && a <= vis && b >= 0 && b <= a && c >= 0 && !r0.match(/[A-Z]{4,}/)) {
-        if (a + c <= vis + 3) { loc = a; canal = b; noloc = c; }
-      }
-    }
-
-    // Municipios
-    if (MUNS.some(m => r0 === m || r0.startsWith(m))) {
-      const nums = r.slice(1).map(v => n(v));
-      if (nums[0] > 0 || nums[1] > 0) {
-        municipios.push({ nombre: clean(r[0]), base: nums[0], vis: nums[1]||0, loc: nums[2]||0, pend: nums[3]||0 });
-      }
-    }
-    if (r0 === 'TOTALES' || r0 === 'TOTAL') {
-      const nums = r.slice(1).map(v => n(v));
-      municipios.push({ nombre: 'TOTALES', base: nums[0], vis: nums[1], loc: nums[2], pend: nums[3], total: true });
-    }
-  }
-
-  // Contar DAI y PAIBIM directo desde las filas de datos
-  rows.forEach(r => {
-    const canal_area = clean(r[13]||'').toUpperCase();
-    const visitado = clean(r[9]||'').toUpperCase();
-    if (visitado === 'SI') {
-      if (canal_area === 'DAI') dai++;
-      if (canal_area === 'PAIBIM') paibim++;
-    }
-  });
-
-  // Si no encontró fecha, usar hoy
-  if (!fecha) {
-    const hoy = new Date();
-    const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-    fecha = `${hoy.getDate()} / ${meses[hoy.getMonth()]} / ${hoy.getFullYear()}`;
-  }
-
-  return { base, vis, loc, canal, noloc, dai, paibim, municipios, fecha };
-}
-
-// ─── RENDER ────────────────────────────────────────────────────
-function render(d) {
-  const pct = d.vis > 0 ? Math.round((d.vis / META) * 100) : 0;
-  const faltan = META - d.vis;
-  const ritmo = (faltan / SEMANAS).toFixed(1);
-  const pLoc = d.vis > 0 ? d.loc / d.vis : 0;
-  const pNoLoc = d.vis > 0 ? d.noloc / d.vis : 0;
-
-  // Header
-  document.getElementById('fecha').textContent = d.fecha;
-  document.getElementById('footer-fecha').textContent = `Datos al ${d.fecha}`;
-
-  // Meta
-  document.getElementById('vis').textContent = d.vis;
-  document.getElementById('pct').textContent = pct + '%';
-  document.getElementById('ritmo').innerHTML = `⏱ Ritmo necesario: <strong>${ritmo} domicilios por semana</strong> (${SEMANAS} semanas restantes · ${faltan} pendientes)`;
-
-  // KPIs
-  document.getElementById('k-base').textContent  = d.base;
-  document.getElementById('k-vis').textContent   = d.vis;
-  document.getElementById('k-loc').textContent   = d.loc;
-  document.getElementById('k-noloc').textContent = d.noloc;
-  document.getElementById('k-canal').textContent = d.canal;
-
-  // Dona
-  const C = 301.6;
-  const arcL = +(C * pLoc).toFixed(1);
-  const arcN = +(C * pNoLoc).toFixed(1);
-  document.getElementById('dona-pct').textContent    = Math.round(pLoc * 100) + '%';
-  document.getElementById('leg-loc').textContent     = d.loc;
-  document.getElementById('leg-loc-p').textContent   = ` · ${Math.round(pLoc*100)}%`;
-  document.getElementById('leg-noloc').textContent   = d.noloc;
-  document.getElementById('leg-noloc-p').textContent = ` · ${Math.round(pNoLoc*100)}%`;
-  document.getElementById('leg-canal').textContent   = d.canal;
-
-  // Canal
-  const naCnt = d.noloc;
-  const efic = d.loc > 0 ? Math.round((d.canal / d.loc) * 100) : 0;
-  document.getElementById('canal-lista').innerHTML = `
-    <div class="ci"><span>DAI</span><span class="cb dai">${d.dai} casos</span></div>
-    <div class="ci"><span>PAIBIM</span><span class="cb pai">${d.paibim} casos</span></div>
-    <div class="ci"><span>No aplica (N/A)</span><span class="cb na">${naCnt} casos</span></div>
-    <div style="margin-top:14px;padding:10px 12px;background:var(--mb);border-radius:10px;font-size:12px;color:var(--m);font-weight:500">
-      ${efic}% de localizadas fueron canalizadas a una instancia de apoyo
-    </div>`;
-
-  // Tabla municipios
-  const maxVis = Math.max(...d.municipios.filter(m=>!m.total).map(m=>m.vis), 1);
-  const tbody = document.getElementById('tbody-mun');
-  tbody.innerHTML = '';
-  d.municipios.forEach(m => {
-    const pctM = m.base > 0 ? Math.round((m.vis / m.base) * 100) : 0;
-    const barW = m.total ? 0 : Math.round((m.vis / maxVis) * 100);
-    const tr = document.createElement('tr');
-    if (m.total) tr.className = 'tot';
-    tr.innerHTML = `
-      <td>${m.nombre}</td><td>${m.base}</td><td>${m.vis}</td><td>${m.loc}</td><td>${m.pend}</td>
-      <td>${m.total ? '' : `<div class="mb2"><div class="mbt"><div class="mbf" data-w="${barW}"></div></div><span style="font-size:11px;color:var(--ts)">${pctM}%</span></div>`}</td>`;
+function render(d){
+  const vis=d.vis||0,base=d.base||0,loc=d.loc||0,noloc=d.noloc||0,canal=d.canal||0,dai=d.dai||0,paibim=d.paibim||0,muns=d.municipios||[];
+  const pct=vis>0?Math.round((vis/META)*100):0,faltan=META-vis,ritmo=(faltan/SEMANAS).toFixed(1);
+  const pLoc=vis>0?loc/vis:0,pNoLoc=vis>0?noloc/vis:0,hoy=fechaHoy();
+  document.getElementById('fecha').textContent=hoy;
+  document.getElementById('footer-fecha').textContent=`Datos al ${hoy}`;
+  document.getElementById('vis').textContent=vis;
+  document.getElementById('pct').textContent=pct+'%';
+  document.getElementById('ritmo').innerHTML=`⏱ Ritmo necesario: <strong>${ritmo} domicilios por semana</strong> (${SEMANAS} semanas restantes · ${faltan} pendientes)`;
+  document.getElementById('k-base').textContent=base;
+  document.getElementById('k-vis').textContent=vis;
+  document.getElementById('k-loc').textContent=loc;
+  document.getElementById('k-noloc').textContent=noloc;
+  document.getElementById('k-canal').textContent=canal;
+  document.getElementById('dona-pct').textContent=Math.round(pLoc*100)+'%';
+  document.getElementById('leg-loc').textContent=loc;
+  document.getElementById('leg-loc-p').textContent=` · ${Math.round(pLoc*100)}%`;
+  document.getElementById('leg-noloc').textContent=noloc;
+  document.getElementById('leg-noloc-p').textContent=` · ${Math.round(pNoLoc*100)}%`;
+  document.getElementById('leg-canal').textContent=canal;
+  const efic=loc>0?Math.round((canal/loc)*100):0;
+  document.getElementById('canal-lista').innerHTML=`
+    <div class="ci"><span>DAI</span><span class="cb dai">${dai} casos</span></div>
+    <div class="ci"><span>PAIBIM</span><span class="cb pai">${paibim} casos</span></div>
+    <div class="ci"><span>No aplica (N/A)</span><span class="cb na">${noloc} casos</span></div>
+    <div style="margin-top:14px;padding:10px 12px;background:var(--mb);border-radius:10px;font-size:12px;color:var(--m);font-weight:500">${efic}% de localizadas fueron canalizadas a una instancia de apoyo</div>`;
+  const maxVis=Math.max(...muns.filter(m=>!m.total).map(m=>m.vis||0),1);
+  const tbody=document.getElementById('tbody-mun');tbody.innerHTML='';
+  muns.forEach(m=>{
+    const pctM=(m.base||0)>0?Math.round(((m.vis||0)/m.base)*100):0;
+    const barW=m.total?0:Math.round(((m.vis||0)/maxVis)*100);
+    const tr=document.createElement('tr');if(m.total)tr.className='tot';
+    tr.innerHTML=`<td>${m.nombre}</td><td>${m.base||0}</td><td>${m.vis||0}</td><td>${m.loc||0}</td><td>${m.pend||0}</td><td>${m.total?'':`<div class="mb2"><div class="mbt"><div class="mbf" data-w="${barW}"></div></div><span style="font-size:11px;color:var(--ts)">${pctM}%</span></div>`}</td>`;
     tbody.appendChild(tr);
   });
-
-  // Animar todo con delay
-  setTimeout(() => {
-    document.getElementById('bf').style.width = Math.min(pct, 100) + '%';
-    document.getElementById('arc-loc').setAttribute('stroke-dasharray', `${Math.max(0,arcL-3)} ${C}`);
-    document.getElementById('arc-noloc').setAttribute('stroke-dasharray', `${Math.max(0,arcN-3)} ${C}`);
-    document.getElementById('arc-noloc').setAttribute('stroke-dashoffset', String(75.4 - arcL));
-    document.querySelectorAll('.mbf[data-w]').forEach(el => el.style.width = el.dataset.w + '%');
-  }, 400);
-
-  // Mostrar app
+  setTimeout(()=>{
+    const C=301.6,arcL=+(C*pLoc).toFixed(1),arcN=+(C*pNoLoc).toFixed(1);
+    document.getElementById('bf').style.width=Math.min(pct,100)+'%';
+    document.getElementById('arc-loc').setAttribute('stroke-dasharray',`${Math.max(0,arcL-3)} ${C}`);
+    document.getElementById('arc-noloc').setAttribute('stroke-dasharray',`${Math.max(0,arcN-3)} ${C}`);
+    document.getElementById('arc-noloc').setAttribute('stroke-dashoffset',String(75.4-arcL));
+    document.querySelectorAll('.mbf[data-w]').forEach(el=>el.style.width=el.dataset.w+'%');
+  },400);
   document.getElementById('loading').classList.add('oculto');
-  setTimeout(() => document.getElementById('loading').style.display = 'none', 600);
-  document.getElementById('app').style.display = 'block';
+  setTimeout(()=>document.getElementById('loading').style.display='none',600);
+  document.getElementById('app').style.display='block';
 }
 
-// ─── CARGA DE DATOS ─────────────────────────────────────────────
-async function fetchCSV(url) {
-  // Intento directo (funciona en GitHub Pages porque el servidor tiene cabeceras correctas)
-  try {
-    const r = await fetch(url);
-    if (r.ok) { const t = await r.text(); if (t.length > 100) return t; }
-  } catch {}
-
-  // Proxies como respaldo
-  for (const proxy of PROXIES) {
-    try {
-      const r = await fetch(proxy(url));
-      if (!r.ok) continue;
-      const t = await r.text();
-      if (t.startsWith('{')) {
-        const j = JSON.parse(t);
-        if (j.contents && j.contents.length > 100) return j.contents;
-      }
-      if (t.length > 100) return t;
-    } catch {}
-  }
-  return null;
-}
-
-async function init() {
-  let texto = null;
-  for (const url of URLS) {
-    texto = await fetchCSV(url);
-    if (texto) break;
-  }
-
-  if (!texto) {
-    document.getElementById('loading').innerHTML = `
-      <p style="color:#fff;font-size:15px;padding:2rem;text-align:center;max-width:320px">
-        ⚠️ No se pudieron cargar los datos.<br><br>
-        Verifica tu conexión a internet y que el archivo de Google Sheets esté publicado.
-      </p>
-      <button onclick="location.reload()" style="margin-top:16px;padding:8px 20px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;color:#fff;font-size:13px;cursor:pointer">
-        🔄 Reintentar
-      </button>`;
-    return;
-  }
-
-  const rows = parseCSV(texto);
-  const datos = extraer(rows);
-  render(datos);
-}
-
-init();
+// JSONP — funciona desde cualquier dominio sin CORS
+window._cb = function(data){ render(data); };
+const s = document.createElement('script');
+s.src = SCRIPT_URL + '?callback=_cb&t=' + Date.now();
+s.onerror = () => {
+  document.getElementById('loading').innerHTML='<p style="color:#fff;font-size:14px;padding:2rem;text-align:center">⚠️ Error al cargar datos.<br>Verifica tu conexión.</p>';
+};
+document.head.appendChild(s);
 </script>
 </body>
 </html>
