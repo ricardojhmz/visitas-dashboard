@@ -180,7 +180,7 @@ function fechaHoy(){const h=new Date();const m=['enero','febrero','marzo','abril
 
 function render(d){
   const vis=d.vis||0,base=d.base||0,loc=d.loc||0,noloc=d.noloc||0,canal=d.canal||0,dai=d.dai||0,paibim=d.paibim||0,muns=d.municipios||[];
-  const pct=base>0?Math.round((vis/base)*100):0,faltan=META-vis,ritmo=(faltan/SEMANAS).toFixed(1);
+  const pct=vis>0?Math.round((vis/META)*100):0,faltan=META-vis,ritmo=(faltan/SEMANAS).toFixed(1);
   const pLoc=vis>0?loc/vis:0,pNoLoc=vis>0?noloc/vis:0,hoy=fechaHoy();
   document.getElementById('fecha').textContent=hoy;
   document.getElementById('footer-fecha').textContent=`Datos al ${hoy}`;
