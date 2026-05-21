@@ -241,10 +241,16 @@ function descargarExcel(nombreArchivo, encabezados, filas){
       h2{color:#5C2D8E;font-family:Calibri,Arial,sans-serif;margin:0 0 10px 0;font-size:14pt}
       .info{font-size:9pt;color:#6B5F80;margin-bottom:14px}
       @media print{
-        @page{size:landscape;margin:0}
-        body{margin:0;padding:8px}
-        table{font-size:9pt}
-        th,td{padding:4px 6px}
+        @page{size:landscape;margin:0mm}
+        body{margin:0;padding:4px}
+        table{font-size:8pt;width:100%}
+        th,td{padding:3px 5px}
+        h2{font-size:11pt;margin:0 0 4px 0}
+        .info{font-size:8pt;margin-bottom:6px}
+      }
+      html{
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
       }
     </style>`;
   const fecha=new Date();
@@ -257,6 +263,13 @@ function descargarExcel(nombreArchivo, encabezados, filas){
   const tipo=nombreArchivo.split('_')[0];
   const titulo=titulos[tipo]||nombreArchivo;
   let html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="UTF-8">
+<xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Datos</x:Name>
+<x:WorksheetOptions><x:Print><x:ValidPrinterInfo/><x:PaperSizeIndex>9</x:PaperSizeIndex>
+<x:Scale>85</x:Scale><x:Landscape/></x:Print><x:FitToPage/>
+<x:PageSetup><x:Layout x:Orientation="Landscape"/><x:Header x:Margin="0"/><x:Footer x:Margin="0"/></x:PageSetup>
+</x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml>
+${estilo}</head><body>
 <head><meta charset="UTF-8">${estilo}</head><body>
 <h2>Secretaría de las Mujeres — ${titulo}</h2>
 <div class="info">Generado el ${fechaStr} · VISITAS_SEC_MUJERES_2026 · Total registros: ${filas.length}</div>
