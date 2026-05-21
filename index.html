@@ -302,13 +302,34 @@ ${estilo}</head><body>
 
 // ── DATOS GLOBALES ─────────────────────────────────────────────
 let _registros = {};
-
+function exportar(tipo, registros){
+  const r = registros[tipo] || [];
+  let enc, filas;
+  if(tipo==='base'){
+    enc=['ID','Municipio','Domicilio','Colonia','Estatus','Visitado','Fecha Visita','Canalizado','Área Canalización'];
+    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.estatus,f.visitado,f.fecha,f.canalizado,f.area]);
+  } else if(tipo==='visitados'){
+    enc=['ID','Municipio','Domicilio','Colonia','Fecha Visita','Canalizado','Área Canalización'];
+    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.fecha,f.canalizado,f.area]);
+  } else if(tipo==='localizadas'){
+    enc=['ID','Municipio','Domicilio','Colonia','Fecha Visita','Canalizado','Área Canalización'];
+    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.fecha,f.canalizado,f.area]);
+  } else if(tipo==='noLocalizadas'){
+    enc=['ID','Municipio','Domicilio','Colonia','Fecha Visita'];
+    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.fecha]);
+  } else if(tipo==='canalizados'||tipo==='dai'||tipo==='paibim'){
+    enc=['ID','Municipio','Domicilio','Colonia','Fecha Visita','Área Canalización'];
+    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.fecha,f.area]);
+  }
+  const fecha=new Date();
+  const nombreArchivo=`${tipo}_${fecha.getDate()}-${fecha.getMonth()+1}-${fecha.getFullYear()}`;
+  descargarExcel(nombreArchivo, enc, filas);
+}
 window._cb = function(data){
   _registros = data.registros || {};
   render(data);
 };
 
-window.exportar = exportar;
 const s = document.createElement('script');
 s.src = SCRIPT_URL + '?callback=_cb&t=' + Date.now();
 s.onerror = () => {
