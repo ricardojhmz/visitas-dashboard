@@ -229,11 +229,46 @@ function render(d){
 // JSONP — funciona desde cualquier dominio sin CORS
 // ── EXCEL ──────────────────────────────────────────────────────
 function descargarExcel(nombreArchivo, encabezados, filas){
-  const datos = [encabezados, ...filas.map(f => encabezados.map((_,i) => f[i]||''))];
-  const ws = XLSX.utils.aoa_to_sheet(datos);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Datos');
-  XLSX.writeFile(wb, nombreArchivo+'.xlsx');
+  const estilo=`
+    <style>
+      body{font-family:Calibri,Arial,sans-serif;margin:0;padding:0}
+      table{border-collapse:collapse;width:100%;font-size:11pt}
+      th{background:#5C2D8E;color:#ffffff;padding:8px 10px;text-align:left;font-weight:600;border:1px solid #4a2070}
+      td{padding:6px 10px;border:1px solid #E0D6EE;vertical-align:top}
+      tr:nth-child(even) td{background:#F4EEF9}
+      tr:nth-child(odd) td{background:#ffffff}
+      tr:hover td{background:#EDE6F5}
+      h2{color:#5C2D8E;font-family:Calibri,Arial,sans-serif;margin:0 0 10px 0;font-size:14pt}
+      .info{font-size:9pt;color:#6B5F80;margin-bottom:14px}
+      @media print{
+        @page{size:landscape;margin:0}
+        body{margin:0;padding:8px}
+        table{font-size:9pt}
+        th,td{padding:4px 6px}
+      }
+    </style>`;
+  const fecha=new Date();
+  const fechaStr=`${fecha.getDate()}/${fecha.getMonth()+1}/${fecha.getFullYear()}`;
+  const titulos={
+    base:'Registros en Base',visitados:'Domicilios Visitados',
+    localizadas:'Usuarias Localizadas',noLocalizadas:'Usuarias No Localizadas',
+    canalizados:'Casos Canalizados',dai:'Canalizados — DAI',paibim:'Canalizados — PAIBIM'
+  };
+  const tipo=nombreArchivo.split('_')[0];
+  const titulo=titulos[tipo]||nombreArchivo;
+  let html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="UTF-8">${estilo}</head><body>
+<h2>Secretaría de las Mujeres — ${titulo}</h2>
+<div class="info">Generado el ${fechaStr} · VISITAS_SEC_MUJERES_2026 · Total registros: ${filas.length}</div>
+<table>
+<thead><tr>${encabezados.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+<tbody>${filas.map(f=>`<tr>${encabezados.map((_,i)=>`<td>${f[i]||''}</td>`).join('')}</tr>`).join('')}
+</tbody></table></body></html>`;
+  const blob=new Blob([html],{type:'application/vnd.ms-excel;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=nombreArchivo+'.xls'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function exportar(tipo, registros){
   const r = registros[tipo] || [];
