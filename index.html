@@ -302,7 +302,7 @@ ${estilo}</head><body>
 
 // ── DATOS GLOBALES ─────────────────────────────────────────────
 let _registros = {};
-function exportar(tipo, registros){
+window.exportar = function(tipo, registros){
   const r = registros[tipo] || [];
   let enc, filas;
   if(tipo==='base'){
