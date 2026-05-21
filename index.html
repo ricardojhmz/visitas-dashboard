@@ -208,7 +208,7 @@ function render(d){
   const tbody=document.getElementById('tbody-mun');tbody.innerHTML='';
   muns.forEach(m=>{
     const pctM=(m.base||0)>0?Math.round(((m.vis||0)/m.base)*100):0;
-    const barW=m.total?0:Math.round(((m.vis||0)/maxVis)*100);
+    const barW=m.total?0:(m.base>0?Math.round(((m.vis||0)/m.base)*100):0);
     const tr=document.createElement('tr');if(m.total)tr.className='tot';
     tr.innerHTML=`<td>${m.nombre}</td><td>${m.base||0}</td><td>${m.vis||0}</td><td>${m.loc||0}</td><td>${m.pend||0}</td><td>${m.total?'':`<div class="mb2"><div class="mbt"><div class="mbf" data-w="${barW}"></div></div><span style="font-size:11px;color:var(--ts)">${pctM}%</span></div>`}</td>`;
     tbody.appendChild(tr);
