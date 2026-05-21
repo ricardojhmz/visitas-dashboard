@@ -307,6 +307,8 @@ window._cb = function(data){
   _registros = data.registros || {};
   render(data);
 };
+
+window.exportar = exportar;
 const s = document.createElement('script');
 s.src = SCRIPT_URL + '?callback=_cb&t=' + Date.now();
 s.onerror = () => {
