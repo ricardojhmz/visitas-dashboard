@@ -229,32 +229,6 @@ function render(d){
 // JSONP — funciona desde cualquier dominio sin CORS
 // ── EXCEL ──────────────────────────────────────────────────────
 function descargarExcel(nombreArchivo, encabezados, filas){
-  const estilo=`
-    <style>
-      body{font-family:Calibri,Arial,sans-serif;margin:0;padding:0}
-      table{border-collapse:collapse;width:100%;font-size:11pt}
-      th{background:#5C2D8E;color:#ffffff;padding:8px 10px;text-align:left;font-weight:600;border:1px solid #4a2070}
-      td{padding:6px 10px;border:1px solid #E0D6EE;vertical-align:top}
-      tr:nth-child(even) td{background:#F4EEF9}
-      tr:nth-child(odd) td{background:#ffffff}
-      tr:hover td{background:#EDE6F5}
-      h2{color:#5C2D8E;font-family:Calibri,Arial,sans-serif;margin:0 0 10px 0;font-size:14pt}
-      .info{font-size:9pt;color:#6B5F80;margin-bottom:14px}
-      @media print{
-        @page{size:landscape;margin:0mm}
-        body{margin:0;padding:4px}
-        table{font-size:8pt;width:100%}
-        th,td{padding:3px 5px}
-        h2{font-size:11pt;margin:0 0 4px 0}
-        .info{font-size:8pt;margin-bottom:6px}
-      }
-      html{
-        -webkit-print-color-adjust:exact;
-        print-color-adjust:exact;
-      }
-    </style>`;
-  const fecha=new Date();
-  const fechaStr=`${fecha.getDate()}/${fecha.getMonth()+1}/${fecha.getFullYear()}`;
   const titulos={
     base:'Registros en Base',visitados:'Domicilios Visitados',
     localizadas:'Usuarias Localizadas',noLocalizadas:'Usuarias No Localizadas',
@@ -262,49 +236,68 @@ function descargarExcel(nombreArchivo, encabezados, filas){
   };
   const tipo=nombreArchivo.split('_')[0];
   const titulo=titulos[tipo]||nombreArchivo;
-  let html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+  const fecha=new Date();
+  const fechaStr=`${fecha.getDate()}/${fecha.getMonth()+1}/${fecha.getFullYear()}`;
+
+  const estilo=`<style>
+    body{font-family:Calibri,Arial,sans-serif;margin:0;padding:0}
+    table{border-collapse:collapse;width:100%;font-size:10pt}
+    th{background:#5C2D8E;color:#ffffff;padding:6px 8px;text-align:left;font-weight:600;border:1px solid #4a2070}
+    td{padding:5px 8px;border:1px solid #E0D6EE;vertical-align:top;font-size:10pt}
+    tr:nth-child(even) td{background:#F4EEF9}
+    tr:nth-child(odd) td{background:#ffffff}
+    h2{color:#5C2D8E;font-size:13pt;margin:0 0 2px 0}
+    .info{font-size:8pt;color:#6B5F80;margin-bottom:8px}
+    html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    @media print{
+      @page{size:landscape;margin:0mm}
+      body{margin:0;padding:4px}
+      table{font-size:8pt}
+      th,td{padding:3px 5px}
+      h2{font-size:10pt}
+    }
+  </style>`;
+
+  // Limpiar fechas largas
+  const filasLimpias = filas.map(fila => fila.map(cel => {
+    const s = String(cel||'');
+    if(s.includes('GMT') || s.includes('00:00:00')){
+      const d = new Date(s);
+      if(!isNaN(d)) return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+    }
+    return s;
+  }));
+
+  let html=`<html xmlns:o="urn:schemas-microsoft-com:office:office"
+    xmlns:x="urn:schemas-microsoft-com:office:excel"
+    xmlns="http://www.w3.org/TR/REC-html40">
 <head><meta charset="UTF-8">
-<xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Datos</x:Name>
-<x:WorksheetOptions><x:Print><x:ValidPrinterInfo/><x:PaperSizeIndex>9</x:PaperSizeIndex>
-<x:Scale>85</x:Scale><x:Landscape/></x:Print><x:FitToPage/>
-<x:PageSetup><x:Layout x:Orientation="Landscape"/><x:Header x:Margin="0"/><x:Footer x:Margin="0"/></x:PageSetup>
-</x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml>
+<xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+<x:Name>Datos</x:Name>
+<x:WorksheetOptions>
+<x:Print><x:ValidPrinterInfo/><x:Landscape/><x:PaperSizeIndex>9</x:PaperSizeIndex></x:Print>
+<x:FitToPage/>
+<x:PageSetup>
+<x:Layout x:Orientation="Landscape"/>
+<x:Header x:Margin="0"/>
+<x:Footer x:Margin="0"/>
+<x:PageMargins x:Bottom="0" x:Left="0" x:Right="0" x:Top="0"/>
+</x:PageSetup>
+</x:WorksheetOptions>
+</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml>
 ${estilo}</head><body>
-<head><meta charset="UTF-8">${estilo}</head><body>
 <h2>Secretaría de las Mujeres — ${titulo}</h2>
-<div class="info">Generado el ${fechaStr} · VISITAS_SEC_MUJERES_2026 · Total registros: ${filas.length}</div>
+<div class="info">Generado el ${fechaStr} &nbsp;·&nbsp; VISITAS_SEC_MUJERES_2026 &nbsp;·&nbsp; Total registros: ${filasLimpias.length}</div>
 <table>
 <thead><tr>${encabezados.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
-<tbody>${filas.map(f=>`<tr>${encabezados.map((_,i)=>`<td>${f[i]||''}</td>`).join('')}</tr>`).join('')}
+<tbody>${filasLimpias.map(f=>`<tr>${encabezados.map((_,i)=>`<td>${f[i]||''}</td>`).join('')}</tr>`).join('')}
 </tbody></table></body></html>`;
+
   const blob=new Blob([html],{type:'application/vnd.ms-excel;charset=utf-8'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url; a.download=nombreArchivo+'.xls'; a.click();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
-}
-function exportar(tipo, registros){
-  const r = registros[tipo] || [];
-  let enc, filas;
-  if(tipo==='base'){
-    enc=['ID','Municipio','Domicilio','Colonia','Estatus','Visitado','Fecha Visita','Canalizado','Área Canalización'];
-    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.estatus,f.visitado,f.fecha,f.canalizado,f.area]);
-  } else if(tipo==='visitados'){
-    enc=['ID','Municipio','Domicilio','Colonia','Fecha Visita','Canalizado','Área Canalización'];
-    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.fecha,f.canalizado,f.area]);
-  } else if(tipo==='localizadas'){
-    enc=['ID','Municipio','Domicilio','Colonia','Fecha Visita','Canalizado','Área Canalización'];
-    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.fecha,f.canalizado,f.area]);
-  } else if(tipo==='noLocalizadas'){
-    enc=['ID','Municipio','Domicilio','Colonia','Fecha Visita'];
-    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.fecha]);
-  } else if(tipo==='canalizados'||tipo==='dai'||tipo==='paibim'){
-    enc=['ID','Municipio','Domicilio','Colonia','Fecha Visita','Área Canalización'];
-    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.fecha,f.area]);
-  }
-  const fecha=new Date();
-  const nombreArchivo=`${tipo}_${fecha.getDate()}-${fecha.getMonth()+1}-${fecha.getFullYear()}`;
-  descargarExcel(nombreArchivo, enc, filas);
 }
 
 // ── DATOS GLOBALES ─────────────────────────────────────────────
