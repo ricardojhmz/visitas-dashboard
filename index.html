@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Visitas Domiciliarias · Secretaría de las Mujeres 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>  
 <style>
@@ -239,67 +240,54 @@ function descargarExcel(nombreArchivo, encabezados, filas){
   const fecha=new Date();
   const fechaStr=`${fecha.getDate()}/${fecha.getMonth()+1}/${fecha.getFullYear()}`;
 
-  const estilo=`<style>
-    body{font-family:Calibri,Arial,sans-serif;margin:0;padding:0}
-    table{border-collapse:collapse;width:100%;font-size:10pt}
-    th{background:#5C2D8E;color:#ffffff;padding:6px 8px;text-align:left;font-weight:600;border:1px solid #4a2070}
-    td{padding:5px 8px;border:1px solid #E0D6EE;vertical-align:top;font-size:10pt}
-    tr:nth-child(even) td{background:#F4EEF9}
-    tr:nth-child(odd) td{background:#ffffff}
-    h2{color:#5C2D8E;font-size:13pt;margin:0 0 2px 0}
-    .info{font-size:8pt;color:#6B5F80;margin-bottom:8px}
-    html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-    @media print{
-      @page{size:landscape;margin:0mm}
-      body{margin:0;padding:4px}
-      table{font-size:8pt}
-      th,td{padding:3px 5px}
-      h2{font-size:10pt}
-    }
-  </style>`;
-
   // Limpiar fechas largas
-  const filasLimpias = filas.map(fila => fila.map(cel => {
-    const s = String(cel||'');
-    if(s.includes('GMT') || s.includes('00:00:00') || s.match(/^\d{4}-\d{2}-\d{2}/) || s.match(/^[A-Z][a-z]{2}\s/)){
-      const d = new Date(s);
+  const filasLimpias=filas.map(fila=>fila.map(cel=>{
+    const s=String(cel||'');
+    if(s.includes('GMT')||s.includes('00:00:00')||s.match(/^\d{4}-\d{2}-\d{2}/)||s.match(/^[A-Z][a-z]{2}\s/)){
+      const d=new Date(s);
       if(!isNaN(d)) return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
     }
     return s;
   }));
 
-  let html=`<html xmlns:o="urn:schemas-microsoft-com:office:office"
-    xmlns:x="urn:schemas-microsoft-com:office:excel"
-    xmlns="http://www.w3.org/TR/REC-html40">
-<head><meta charset="UTF-8">
-<xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
-<x:Name>Datos</x:Name>
-<x:WorksheetOptions>
-<x:Print><x:ValidPrinterInfo/><x:Landscape/><x:PaperSizeIndex>9</x:PaperSizeIndex></x:Print>
-<x:FitToPage/>
-<x:PageSetup>
-<x:Layout x:Orientation="Landscape"/>
-<x:Header x:Margin="0"/>
-<x:Footer x:Margin="0"/>
-<x:PageMargins x:Bottom="0" x:Left="0" x:Right="0" x:Top="0"/>
-</x:PageSetup>
-</x:WorksheetOptions>
-</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml>
-${estilo}</head><body>
-<h2>Secretaría de las Mujeres — ${titulo}</h2>
-<div class="info">Generado el ${fechaStr} &nbsp;·&nbsp; VISITAS_SEC_MUJERES_2026 &nbsp;·&nbsp; Total registros: ${filasLimpias.length}</div>
-<table>
-<thead><tr>${encabezados.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
-<tbody>${filasLimpias.map(f=>`<tr>${encabezados.map((_,i)=>`<td>${f[i]||''}</td>`).join('')}</tr>`).join('')}
-</tbody></table></body></html>`;
+  // Crear workbook
+  const wb = XLSX.utils.book_new();
 
-  const blob=new Blob([html],{type:'application/vnd.ms-excel;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url; a.download=nombreArchivo+'.xls'; a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  // Fila de título
+  const wsData = [
+    [`Secretaría de las Mujeres — ${titulo}`],
+    [`Generado el ${fechaStr}   ·   VISITAS_SEC_MUJERES_2026   ·   Total registros: ${filasLimpias.length}`],
+    [],
+    encabezados,
+    ...filasLimpias
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  // Ancho de columnas automático
+  const colWidths = encabezados.map((h,i)=>{
+    const maxLen = Math.max(
+      h.length,
+      ...filasLimpias.map(f=>String(f[i]||'').length)
+    );
+    return {wch: Math.min(maxLen+2, 40)};
+  });
+  ws['!cols'] = colWidths;
+
+  // Orientación horizontal y márgenes en cero
+  ws['!pageSetup'] = {orientation:'landscape', fitToPage:true, fitToWidth:1, fitToHeight:0, paperSize:9};
+  ws['!margins'] = {left:0, right:0, top:0, bottom:0, header:0, footer:0};
+
+  // Estilos — título en morado
+  const tituloCell = ws['A1'];
+  if(tituloCell) tituloCell.s = {
+    font:{bold:true, color:{rgb:'5C2D8E'}, sz:14},
+    fill:{fgColor:{rgb:'F4EEF9'}}
+  };
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Datos');
+  XLSX.writeFile(wb, nombreArchivo+'.xlsx');
 }
-
 // ── DATOS GLOBALES ─────────────────────────────────────────────
 let _registros = {};
 window.exportar = function(tipo, registros){
