@@ -134,11 +134,11 @@ body{font-family:'DM Sans',sans-serif;background:#EDE6F5;color:var(--t);min-heig
       <div class="rn" id="ritmo">Calculando…</div>
     </div>
     <div class="kg">
-      <div class="kpi k1 a1" onclick="exportar('base',_registros)" style="cursor:pointer" title="Descargar Excel"><span class="ki">📋</span><div class="kv" id="k-base">—</div><div class="kl">En base<br>(total registros)</div></div>
-      <div class="kpi k2 a2" onclick="exportar('visitados',_registros)" style="cursor:pointer" title="Descargar Excel"><span class="ki">🏠</span><div class="kv" id="k-vis">—</div><div class="kl">Visitados<br>(acumulado)</div></div>
-      <div class="kpi k3 a2" onclick="exportar('localizadas',_registros)" style="cursor:pointer" title="Descargar Excel"><span class="ki">✅</span><div class="kv" id="k-loc">—</div><div class="kl">Usuarias<br>localizadas</div></div>
-      <div class="kpi k4 a3" onclick="exportar('noLocalizadas',_registros)" style="cursor:pointer" title="Descargar Excel"><span class="ki">❌</span><div class="kv" id="k-noloc">—</div><div class="kl">No<br>localizadas</div></div>
-      <div class="kpi k5 a3" onclick="exportar('canalizados',_registros)" style="cursor:pointer" title="Descargar Excel"><span class="ki">🔗</span><div class="kv" id="k-canal">—</div><div class="kl">Casos<br>canalizados</div></div>
+      <div class="kpi k1 a1" onclick="exportar('base')" style="cursor:pointer" title="Descargar Excel"><span class="ki">📋</span><div class="kv" id="k-base">—</div><div class="kl">En base<br>(total registros)</div></div>
+      <div class="kpi k2 a2" onclick="exportar('visitados')" style="cursor:pointer" title="Descargar Excel"><span class="ki">🏠</span><div class="kv" id="k-vis">—</div><div class="kl">Visitados<br>(acumulado)</div></div>
+      <div class="kpi k3 a2" onclick="exportar('localizadas')" style="cursor:pointer" title="Descargar Excel"><span class="ki">✅</span><div class="kv" id="k-loc">—</div><div class="kl">Usuarias<br>localizadas</div></div>
+      <div class="kpi k4 a3" onclick="exportar('noLocalizadas')" style="cursor:pointer" title="Descargar Excel"><span class="ki">❌</span><div class="kv" id="k-noloc">—</div><div class="kl">No<br>localizadas</div></div>
+      <div class="kpi k5 a3" onclick="exportar('canalizados')" style="cursor:pointer" title="Descargar Excel"><span class="ki">🔗</span><div class="kv" id="k-canal">—</div><div class="kl">Casos<br>canalizados</div></div>
     </div>
     <div class="dc">
       <div class="cd a2">
@@ -202,8 +202,8 @@ function render(d){
   document.getElementById('leg-canal').textContent=canal;
   const efic=loc>0?Math.round((canal/loc)*100):0;
   document.getElementById('canal-lista').innerHTML=`
-    <div class="ci" onclick="exportar('dai',_registros)" style="cursor:pointer"><span>DAI</span><span class="cb dai">${dai} casos ⬇️</span></div>
-    <div class="ci" onclick="exportar('paibim',_registros)" style="cursor:pointer"><span>PAIBIM</span><span class="cb pai">${paibim} casos ⬇️</span></div>
+    <div class="ci" onclick="exportar('dai')" style="cursor:pointer"><span>DAI</span><span class="cb dai">${dai} casos ⬇️</span></div>
+    <div class="ci" onclick="exportar('paibim')" style="cursor:pointer"><span>PAIBIM</span><span class="cb pai">${paibim} casos ⬇️</span></div>
     <div class="ci"><span>No aplica (N/A)</span><span class="cb na">${noloc} casos</span></div>
     <div style="margin-top:14px;padding:10px 12px;background:var(--mb);border-radius:10px;font-size:12px;color:var(--m);font-weight:500">${efic}% de localizadas fueron canalizadas a una instancia de apoyo</div>`;
   const maxVis=Math.max(...muns.filter(m=>!m.total).map(m=>m.vis||0),1);
@@ -229,126 +229,35 @@ function render(d){
 
 // JSONP — funciona desde cualquier dominio sin CORS
 // ── EXCEL ──────────────────────────────────────────────────────
-function descargarExcel(nombreArchivo, encabezados, filas){
-  const titulos={
-    base:'Registros en Base',visitados:'Domicilios Visitados',
-    localizadas:'Usuarias Localizadas',noLocalizadas:'Usuarias No Localizadas',
-    canalizados:'Casos Canalizados',dai:'Canalizados — DAI',paibim:'Canalizados — PAIBIM'
-  };
-  const tipo=nombreArchivo.split('_')[0];
-  const titulo=titulos[tipo]||nombreArchivo;
-  const fecha=new Date();
-  const fechaStr=`${fecha.getDate()}/${fecha.getMonth()+1}/${fecha.getFullYear()}`;
-
-  // Limpiar fechas largas
-  const filasLimpias=filas.map(fila=>fila.map(cel=>{
-    const s=String(cel||'');
-    if(s.includes('GMT')||s.includes('00:00:00')||s.match(/^\d{4}-\d{2}-\d{2}/)||s.match(/^[A-Z][a-z]{2}\s/)){
-      const d=new Date(s);
-      if(!isNaN(d)) return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
-    }
-    return s;
-  }));
-
-  const wb = XLSX.utils.book_new();
-  const numCols = encabezados.length;
-
-  // Datos: fila 1 vacía, fila 2 título, fila 3 info, fila 4 encabezados, fila 5+ datos
-  const wsData = [
-    Array(numCols+1).fill(''),
-    ['', `Secretaría de las Mujeres — ${titulo}`, ...Array(numCols-1).fill('')],
-    ['', `Generado el ${fechaStr}   ·   VISITAS_SEC_MUJERES_2026   ·   Total registros: ${filasLimpias.length}`, ...Array(numCols-1).fill('')],
-    ['', ...encabezados],
-    ...filasLimpias.map(f=>['', ...encabezados.map((_,i)=>f[i]||'')])
-  ];
-
-  const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-  // Merge título fila 2: B2:F2 (o hasta última columna)
-  const lastCol = XLSX.utils.encode_col(numCols);
-  if(!ws['!merges']) ws['!merges']=[];
-  ws['!merges'].push({s:{r:1,c:1}, e:{r:1,c:numCols}});  // título
-  ws['!merges'].push({s:{r:2,c:1}, e:{r:2,c:numCols}});  // info
-
-  // Estilos
-  const morado = 'FF7030A0';
-  const blanco = 'FFFFFFFF';
-  const moradoClaro = 'FFF4EEF9';
-
-  function estilo(bold, sz, color, bgColor, hAlign){
-    return {
-      font:{bold:bold||false, sz:sz||12, color:{rgb:color||'FF000000'}, name:'Calibri'},
-      fill: bgColor ? {patternType:'solid', fgColor:{rgb:bgColor}} : {patternType:'none'},
-      alignment:{horizontal:hAlign||'left', vertical:'center'}
-    };
-  }
-
-  // Aplicar estilo al título B2
-  const tituloRef = XLSX.utils.encode_cell({r:1,c:1});
-  ws[tituloRef].s = estilo(false, 14, blanco, morado, 'center');
-
-  // Aplicar estilo a info B3
-  const infoRef = XLSX.utils.encode_cell({r:2,c:1});
-  if(ws[infoRef]) ws[infoRef].s = estilo(false, 10, 'FF6B5F80', null, 'center');
-
-  // Encabezados fila 4
-  for(let i=0;i<encabezados.length;i++){
-    const ref = XLSX.utils.encode_cell({r:3,c:i+1});
-    if(ws[ref]) ws[ref].s = estilo(true, 12, blanco, morado, 'center');
-  }
-
-  // Datos
-  for(let r=0;r<filasLimpias.length;r++){
-    for(let c=0;c<encabezados.length;c++){
-      const ref = XLSX.utils.encode_cell({r:4+r,c:c+1});
-      if(ws[ref]) ws[ref].s = estilo(false, 12, 'FF000000', r%2===0?null:moradoClaro, 'left');
-    }
-  }
-
-  // Anchos de columna
-  ws['!cols'] = [
-    {wch:4},  // Col A vacía
-    ...encabezados.map((h,i)=>{
-      const max=Math.max(h.length,...filasLimpias.map(f=>String(f[i]||'').length));
-      return {wch:Math.min(max+2,40)};
-    })
-  ];
-
-  // Sin cuadrícula
-  ws['!sheetView'] = {showGridLines:false};
-
-  // Página: horizontal, márgenes cero, centrado, ajustar al ancho
-  ws['!pageSetup'] = {orientation:'landscape', paperSize:9, fitToPage:true, fitToWidth:1, fitToHeight:0};
-  ws['!margins'] = {left:0, right:0, top:0, bottom:0, header:0, footer:0};
-  ws['!printOptions'] = {horizontalCentered:true};
-
-  XLSX.utils.book_append_sheet(wb, ws, 'Datos');
-  XLSX.writeFile(wb, nombreArchivo+'.xlsx', {bookSST:false, type:'binary', cellStyles:true});
-}
 // ── DATOS GLOBALES ─────────────────────────────────────────────
 let _registros = {};
-window.exportar = function(tipo, registros){
-  const r = registros[tipo] || [];
-  let enc, filas;
-  if(tipo==='base'){
-    enc=['ID','Municipio','Domicilio','Colonia','Estatus','Visitado','Fecha Visita','Canalizado','Área Canalización'];
-    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.estatus,f.visitado,f.fecha,f.canalizado,f.area]);
-  } else if(tipo==='visitados'){
-    enc=['ID','Municipio','Domicilio','Colonia','Fecha Visita','Canalizado','Área Canalización'];
-    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.fecha,f.canalizado,f.area]);
-  } else if(tipo==='localizadas'){
-    enc=['ID','Municipio','Domicilio','Colonia','Fecha Visita','Canalizado','Área Canalización'];
-    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.fecha,f.canalizado,f.area]);
-  } else if(tipo==='noLocalizadas'){
-    enc=['ID','Municipio','Domicilio','Colonia','Fecha Visita'];
-    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.fecha]);
-  } else if(tipo==='canalizados'||tipo==='dai'||tipo==='paibim'){
-    enc=['ID','Municipio','Domicilio','Colonia','Fecha Visita','Área Canalización'];
-    filas=r.map(f=>[f.id,f.municipio,f.domicilio,f.colonia,f.fecha,f.area]);
-  }
-  const fecha=new Date();
-  const nombreArchivo=`${tipo}_${fecha.getDate()}-${fecha.getMonth()+1}-${fecha.getFullYear()}`;
-  descargarExcel(nombreArchivo, enc, filas);
+window.exportar = function(tipo){
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlZuIWC-HBIHN0idnjQYM53ennOzDyIME9MRhtpnS9WjzHp1bQvwCzDTlyKa89vHEKTg/exec';
+  const btn = event.currentTarget;
+  const original = btn.innerHTML;
+  btn.style.opacity = '0.6';
+  btn.style.pointerEvents = 'none';
+
+  fetch(SCRIPT_URL + '?tipo=' + tipo)
+    .then(r => r.json())
+    .then(data => {
+      if(data.url){
+        const fecha = new Date();
+        const a = document.createElement('a');
+        a.href = data.url;
+        a.download = tipo + '_' + fecha.getDate() + '-' + (fecha.getMonth()+1) + '-' + fecha.getFullYear() + '.xlsx';
+        a.click();
+      }
+      btn.innerHTML = original;
+      btn.style.opacity = '';
+      btn.style.pointerEvents = '';
+    })
+    .catch(() => {
+      alert('Error al generar el archivo. Intenta de nuevo.');
+      btn.innerHTML = original;
+      btn.style.opacity = '';
+      btn.style.pointerEvents = '';
+    });
 }
 window._cb = function(data){
   _registros = data.registros || {};
