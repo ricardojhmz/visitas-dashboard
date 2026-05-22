@@ -250,43 +250,80 @@ function descargarExcel(nombreArchivo, encabezados, filas){
     return s;
   }));
 
-  // Crear workbook
   const wb = XLSX.utils.book_new();
+  const numCols = encabezados.length;
 
-  // Fila de título
+  // Datos: fila 1 vacía, fila 2 título, fila 3 info, fila 4 encabezados, fila 5+ datos
   const wsData = [
-    [`Secretaría de las Mujeres — ${titulo}`],
-    [`Generado el ${fechaStr}   ·   VISITAS_SEC_MUJERES_2026   ·   Total registros: ${filasLimpias.length}`],
-    [],
-    encabezados,
-    ...filasLimpias
+    Array(numCols+1).fill(''),
+    ['', `Secretaría de las Mujeres — ${titulo}`, ...Array(numCols-1).fill('')],
+    ['', `Generado el ${fechaStr}   ·   VISITAS_SEC_MUJERES_2026   ·   Total registros: ${filasLimpias.length}`, ...Array(numCols-1).fill('')],
+    ['', ...encabezados],
+    ...filasLimpias.map(f=>['', ...encabezados.map((_,i)=>f[i]||'')])
   ];
 
   const ws = XLSX.utils.aoa_to_sheet(wsData);
 
-  // Ancho de columnas automático
-  const colWidths = encabezados.map((h,i)=>{
-    const maxLen = Math.max(
-      h.length,
-      ...filasLimpias.map(f=>String(f[i]||'').length)
-    );
-    return {wch: Math.min(maxLen+2, 40)};
-  });
-  ws['!cols'] = colWidths;
+  // Merge título fila 2: B2:F2 (o hasta última columna)
+  const lastCol = XLSX.utils.encode_col(numCols);
+  if(!ws['!merges']) ws['!merges']=[];
+  ws['!merges'].push({s:{r:1,c:1}, e:{r:1,c:numCols}});  // título
+  ws['!merges'].push({s:{r:2,c:1}, e:{r:2,c:numCols}});  // info
 
-  // Orientación horizontal y márgenes en cero
-  ws['!pageSetup'] = {orientation:'landscape', fitToPage:true, fitToWidth:1, fitToHeight:0, paperSize:9};
+  // Estilos
+  const morado = 'FF7030A0';
+  const blanco = 'FFFFFFFF';
+  const moradoClaro = 'FFF4EEF9';
+
+  function estilo(bold, sz, color, bgColor, hAlign){
+    return {
+      font:{bold:bold||false, sz:sz||12, color:{rgb:color||'FF000000'}, name:'Calibri'},
+      fill: bgColor ? {patternType:'solid', fgColor:{rgb:bgColor}} : {patternType:'none'},
+      alignment:{horizontal:hAlign||'left', vertical:'center'}
+    };
+  }
+
+  // Aplicar estilo al título B2
+  const tituloRef = XLSX.utils.encode_cell({r:1,c:1});
+  ws[tituloRef].s = estilo(false, 14, blanco, morado, 'center');
+
+  // Aplicar estilo a info B3
+  const infoRef = XLSX.utils.encode_cell({r:2,c:1});
+  if(ws[infoRef]) ws[infoRef].s = estilo(false, 10, 'FF6B5F80', null, 'center');
+
+  // Encabezados fila 4
+  for(let i=0;i<encabezados.length;i++){
+    const ref = XLSX.utils.encode_cell({r:3,c:i+1});
+    if(ws[ref]) ws[ref].s = estilo(true, 12, blanco, morado, 'center');
+  }
+
+  // Datos
+  for(let r=0;r<filasLimpias.length;r++){
+    for(let c=0;c<encabezados.length;c++){
+      const ref = XLSX.utils.encode_cell({r:4+r,c:c+1});
+      if(ws[ref]) ws[ref].s = estilo(false, 12, 'FF000000', r%2===0?null:moradoClaro, 'left');
+    }
+  }
+
+  // Anchos de columna
+  ws['!cols'] = [
+    {wch:4},  // Col A vacía
+    ...encabezados.map((h,i)=>{
+      const max=Math.max(h.length,...filasLimpias.map(f=>String(f[i]||'').length));
+      return {wch:Math.min(max+2,40)};
+    })
+  ];
+
+  // Sin cuadrícula
+  ws['!sheetView'] = {showGridLines:false};
+
+  // Página: horizontal, márgenes cero, centrado, ajustar al ancho
+  ws['!pageSetup'] = {orientation:'landscape', paperSize:9, fitToPage:true, fitToWidth:1, fitToHeight:0};
   ws['!margins'] = {left:0, right:0, top:0, bottom:0, header:0, footer:0};
-
-  // Estilos — título en morado
-  const tituloCell = ws['A1'];
-  if(tituloCell) tituloCell.s = {
-    font:{bold:true, color:{rgb:'5C2D8E'}, sz:14},
-    fill:{fgColor:{rgb:'F4EEF9'}}
-  };
+  ws['!printOptions'] = {horizontalCentered:true};
 
   XLSX.utils.book_append_sheet(wb, ws, 'Datos');
-  XLSX.writeFile(wb, nombreArchivo+'.xlsx');
+  XLSX.writeFile(wb, nombreArchivo+'.xlsx', {bookSST:false, type:'binary', cellStyles:true});
 }
 // ── DATOS GLOBALES ─────────────────────────────────────────────
 let _registros = {};
