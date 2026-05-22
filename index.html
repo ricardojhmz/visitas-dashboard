@@ -240,7 +240,7 @@ window.exportar = function(tipo){
 
   const tag = document.createElement('script');
   const cbName = '_excb_' + Date.now();
-  tag.src = SCRIPT_URL + '?tipo=' + tipo + '&callback=' + cbName;
+  tag.src = SCRIPT_URL + '?tipo=' + tipo + '&callback=' + cbName + '&t=' + Date.now();
   window[cbName] = function(data){
     if(data.url){
       const fecha = new Date();
