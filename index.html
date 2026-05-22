@@ -238,26 +238,30 @@ window.exportar = function(tipo){
   btn.style.opacity = '0.6';
   btn.style.pointerEvents = 'none';
 
-  fetch(SCRIPT_URL + '?tipo=' + tipo)
-    .then(r => r.json())
-    .then(data => {
-      if(data.url){
-        const fecha = new Date();
-        const a = document.createElement('a');
-        a.href = data.url;
-        a.download = tipo + '_' + fecha.getDate() + '-' + (fecha.getMonth()+1) + '-' + fecha.getFullYear() + '.xlsx';
-        a.click();
-      }
-      btn.innerHTML = original;
-      btn.style.opacity = '';
-      btn.style.pointerEvents = '';
-    })
-    .catch(() => {
+  const tag = document.createElement('script');
+  const cbName = '_excb_' + Date.now();
+  tag.src = SCRIPT_URL + '?tipo=' + tipo + '&callback=' + cbName;
+  window[cbName] = function(data){
+    if(data.url){
+      const fecha = new Date();
+      const a = document.createElement('a');
+      a.href = data.url;
+      a.download = tipo+'_'+fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'.xlsx';
+      a.click();
+    } else {
       alert('Error al generar el archivo. Intenta de nuevo.');
-      btn.innerHTML = original;
-      btn.style.opacity = '';
-      btn.style.pointerEvents = '';
-    });
+    }
+    btn.style.opacity='';
+    btn.style.pointerEvents='';
+    delete window[cbName];
+    tag.remove();
+  };
+  tag.onerror = function(){
+    alert('Error al generar el archivo. Intenta de nuevo.');
+    btn.style.opacity=''; btn.style.pointerEvents='';
+    tag.remove();
+  };
+  document.head.appendChild(tag);
 }
 window._cb = function(data){
   _registros = data.registros || {};
