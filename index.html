@@ -234,32 +234,26 @@ let _registros = {};
 window.exportar = function(tipo){
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzlZuIWC-HBIHN0idnjQYM53ennOzDyIME9MRhtpnS9WjzHp1bQvwCzDTlyKa89vHEKTg/exec';
   const btn = event.currentTarget;
-  const original = btn.innerHTML;
   btn.style.opacity = '0.6';
   btn.style.pointerEvents = 'none';
-
-  const tag = document.createElement('script');
   const cbName = '_excb_' + Date.now();
+  const tag = document.createElement('script');
   tag.src = SCRIPT_URL + '?tipo=' + tipo + '&callback=' + cbName + '&t=' + Date.now();
   window[cbName] = function(data){
-    if(data.url){
-      const fecha = new Date();
-      const a = document.createElement('a');
-      a.href = data.url;
-      a.download = tipo+'_'+fecha.getDate()+'-'+(fecha.getMonth()+1)+'-'+fecha.getFullYear()+'.xlsx';
-      a.click();
+    btn.style.opacity = '';
+    btn.style.pointerEvents = '';
+    delete window[cbName];
+    tag.remove();
+    if(data && data.url){
+      window.open(data.url, '_blank');
     } else {
       alert('Error al generar el archivo. Intenta de nuevo.');
     }
-    btn.style.opacity='';
-    btn.style.pointerEvents='';
-    delete window[cbName];
-    tag.remove();
   };
   tag.onerror = function(){
-    alert('Error al generar el archivo. Intenta de nuevo.');
     btn.style.opacity=''; btn.style.pointerEvents='';
     tag.remove();
+    alert('Error al generar el archivo.');
   };
   document.head.appendChild(tag);
 }
