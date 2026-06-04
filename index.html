@@ -261,8 +261,8 @@ function render(d){
   document.getElementById('sm-loc-cur').textContent=m.loc_cur||0;
   document.getElementById('sm-canal-ant').textContent=m.canal_ant||0;
   document.getElementById('sm-canal-cur').textContent=m.canal_cur||0;
-  document.getElementById('sm-rep-ant').textContent='—';
-  document.getElementById('sm-rep-cur').textContent='—';
+  document.getElementById('sm-rep-ant').textContent=m.rep_ant||'—';
+  document.getElementById('sm-rep-cur').textContent=m.rep_cur||'—';
   const efic=loc>0?Math.round((canal/loc)*100):0;
   document.getElementById('canal-lista').innerHTML=`
     <div class="ci" onclick="exportar('dai')" style="cursor:pointer"><span>DAI</span><span class="cb dai">${dai} casos ⬇️</span></div>
